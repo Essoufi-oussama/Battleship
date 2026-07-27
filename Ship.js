@@ -26,5 +26,3 @@ export function Ship(length)
 
     return {hit, isSunk, getLength, is_placed};
 }
-
-module.exports = Ship

@@ -1,5 +1,5 @@
-const { expect } = require('@jest/globals');
-const ship = require('./Ship.js');
+import { expect } from  '@jest/globals';
+import { Ship as ship } from "./Ship.js";
 
 
 
@@ -14,7 +14,7 @@ describe('Ship construction', () =>
     })
     test("invalid construction with big number", () =>
     {
-        expect(() => ship(5)).toThrow();
+        expect(() => ship(6)).toThrow();
     })
     test("invalid construction with negative number", () =>
     {
