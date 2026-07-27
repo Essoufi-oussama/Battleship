@@ -1,10 +1,11 @@
-function Ship(length)
+export function Ship(length)
 {
-    if (!Number.isInteger(length) || length <= 0 || length > 4)
-        throw Error("Ship length must be a positive integer less than 5")
+    if (!Number.isInteger(length) || length <= 0 || length > 5)
+        throw Error("Ship length must be a positive integer between 0 and 5")
     let ship_length = length
     let n_hits = 0;
     let sunk = false;
+    let is_placed = false;
 
     function hit()
     {
@@ -17,7 +18,13 @@ function Ship(length)
     {
         return sunk === true;
     }
-    return {hit, isSunk};
+
+    function getLength()
+    {
+        return ship_length;
+    }
+
+    return {hit, isSunk, getLength, is_placed};
 }
 
-module.exports = Ship
+// module.exports = Ship

@@ -51,3 +51,17 @@ describe('Hit tests', () =>
     })
 })
 
+describe('length tests', () =>
+{   
+    test("valid length",() =>
+    {
+    const ship1 = ship(2);
+    expect(ship1.getLength()).toBe(2)
+    })
+    test("length 3",() =>
+    {
+    const ship1 = ship(3);
+    expect(ship1.getLength()).toBe(3)
+    })
+})
+
