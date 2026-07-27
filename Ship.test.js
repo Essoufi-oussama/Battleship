@@ -1,5 +1,5 @@
 import { expect } from  '@jest/globals';
-import { Ship as ship } from "./Ship.js";
+import { Ship as ship } from "./src/Ship.js";
 
 
 

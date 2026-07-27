@@ -1,0 +1,105 @@
+html, body
+{
+    margin: 0;
+    height: 100%;
+}
+
+.main
+{
+    height: 100%;
+    background-color: #0a1929;
+}
+
+.form-container
+{
+    width: 350px;
+    margin: auto;
+    border: 1px solid #00e5ff;
+    border-radius: 5%;
+}
+
+.form-container > *
+{
+    padding: 10px 20px;
+}
+
+p,label,.input
+{
+    color: #b0bec5;
+    font-size: 14px;
+}
+
+h1
+{
+    color: #d5e4fa;
+}
+
+.main-page
+{
+    height: 100%;
+    display: flex;
+}
+
+#player-creation
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+
+
+.input
+{
+    background-color: #0a1929;
+    border: none;
+    border-bottom: 1px solid rgb(73, 70, 70);
+    padding: 10px 3px;
+}
+
+.submit-button
+{
+    background-color: #72b2ba;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.submit-button:hover
+{
+    background-color: #5bacb7;
+}
+
+.board
+{
+    display: grid;
+    grid-template-columns: repeat(10,  0fr);
+}
+
+.cell
+{
+    border: 1px solid #5bacb7;
+    width: 25px;
+    height: 25px;
+}
+
+.deployment-page
+{
+    padding: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.board-div
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.battleships
+{
+    min-width: 300px;
+    background-color: #26272a;
+}

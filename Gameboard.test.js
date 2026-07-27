@@ -1,6 +1,6 @@
 
-import { Gameboard } from "./Gameboard.js";
-import { Ship } from "./Ship.js";
+import { Gameboard } from "./src/Gameboard.js";
+import { Ship } from "./src/Ship.js";
 
 describe('Place ship',() => {
     test('ship placement 1', () =>{
