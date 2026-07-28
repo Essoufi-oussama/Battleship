@@ -73,33 +73,95 @@ h1
 
 .board
 {
+    width: min(70vw, 600px);
+    aspect-ratio: 1;
     display: grid;
-    grid-template-columns: repeat(10,  0fr);
+    grid-template-columns: repeat(10, 1fr);
+    border: 2px solid #00e5ff;
+    position: relative;
 }
 
 .cell
 {
     border: 1px solid #5bacb7;
-    width: 25px;
-    height: 25px;
+}
+
+.ship
+{
+    position: absolute;
+    object-fit: fill;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
 }
 
 .deployment-page
 {
-    padding: 50px;
+    padding: 2rem;
     display: flex;
+    align-items: stretch; 
     flex-direction: row;
-    gap: 30px;
+    gap: 2rem;
 }
 
 .board-div
 {
     display: flex;
     flex-direction: column;
+    flex: 2;          /* takes about 2/3 of the space */
+    min-width: 300px;
+    align-items: center;
+    justify-content: center;
 }
 
 .battleships
 {
-    min-width: 300px;
-    background-color: #26272a;
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
+
+.battleships-container
+{
+    height: 70%;
+}
+
+.battleship-card img
+{
+    height: 100px;
+    width: 100%;
+    align-items: center;
+    border: 1px solid #83888f;
+}
+
+.battleship-card
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.battleship-card:hover, .active
+{
+    border: 3px solid #83888f;
+}
+
+.cell:hover
+{
+    background-color: #8e4b3b;
+}
+
+@media (max-width: 940px) {
+  .deployment-page
+    {
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+

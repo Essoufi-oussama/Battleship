@@ -16,6 +16,7 @@ export function Gameboard()
         const x = coordinate.x
         const y = coordinate.y
         const ship_len = ship.getLength()
+        console.log(coordinate);
 
         if (x + (hor ? ship_len : 0) <= board.length && y + (hor ? 0 : ship_len) <= board[x].length)
         {
