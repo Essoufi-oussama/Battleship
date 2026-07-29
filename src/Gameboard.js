@@ -8,7 +8,7 @@ export function Gameboard()
             hit: false
         }))
     );
-    const Ships = []
+    let Ships = []
 
     function place_ship(ship, coordinate)
     {
@@ -75,5 +75,15 @@ export function Gameboard()
         return Ships.every(ship => ship.isSunk())
     }
 
-    return {board, place_ship, receiveAttack, gameDone}
+    function clear()
+    {
+        board.forEach(row => {
+            row.forEach(cell => {
+                cell.ship = null;
+                cell.hit = false;
+            });
+        });
+        Ships = []
+    }
+    return {board, clear, place_ship, receiveAttack, gameDone}
 }

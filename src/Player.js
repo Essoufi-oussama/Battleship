@@ -6,7 +6,7 @@ export function Player(_name, _type)
     const name = _name;
     const type = _type;
     const gameboard =  Gameboard();
-    const ships = [];
+    let ships = [];
     function getBoard()
     {
         return gameboard
@@ -26,5 +26,12 @@ export function Player(_name, _type)
         return false;
     }
     
-    return {getBoard, getShips, insertShip}
+    function clear()
+    {
+        ships = []
+        gameboard.clear()
+    }
+
+
+    return {clear, getBoard, getShips, insertShip}
 }

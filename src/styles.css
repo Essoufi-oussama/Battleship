@@ -1,172 +1,216 @@
-html, body
-{
-    margin: 0;
-    height: 100%;
-}
 
-.main
-{
-    min-height: 100vh;
-    background-color: #0a1929;
-}
-
-.form-container
-{
-    width: 350px;
-    margin: auto;
-    border: 1px solid #00e5ff;
-    border-radius: 5%;
-}
-
-.form-container > *
-{
-    padding: 10px 20px;
-}
-
-p,label,.input
-{
-    color: #b0bec5;
-    font-size: 14px;
-}
-
-h1
-{
-    color: #d5e4fa;
-}
-
-.main-page
-{
-    height: 100%;
-    display: flex;
-}
-
-#player-creation
-{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-bottom: 20px;
-}
-
-
-
-.input
-{
-    background-color: #0a1929;
-    border: none;
-    border-bottom: 1px solid rgb(73, 70, 70);
-    padding: 10px 3px;
-}
-
-.submit-button
-{
-    background-color: #72b2ba;
-    padding: 10px;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.submit-button:hover
-{
-    background-color: #5bacb7;
-}
-
-.board
-{
-    width: min(70vw, 600px);
-    aspect-ratio: 1;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    border: 2px solid #00e5ff;
-    position: relative;
-}
-
-.cell
-{
-    border: 1px solid #5bacb7;
-}
-
-.ship
-{
-    position: absolute;
-    pointer-events: none;
-    object-fit: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100% 100%;
-}
-
-.deployment-page
-{
-    padding: 2rem;
-    display: flex;
-    align-items: stretch; 
-    flex-direction: row;
-    gap: 2rem;
-    
-}
-
-.board-div
-{
-    display: flex;
-    flex-direction: column;
-    flex: 2;          /* takes about 2/3 of the space */
-    min-width: 300px;
-    align-items: center;
-    justify-content: center;
-}
-
-.battleships
-{
-    flex: 1;
-    min-width: 220px;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-}
-
-.battleships-container
-{
-    height: 70%;
-}
-
-.battleship-card img
-{
-    height: 100px;
-    width: 100%;
-    align-items: center;
-    border: 1px solid #83888f;
-}
-
-.battleship-card
-{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.battleship-card:hover, .active
-{
-    border: 3px solid #83888f;
-}
-
-.cell:hover
-{
-    background-color: #8e4b3b;
-}
-
-@media (max-width: 940px) {
-  .deployment-page
+    html, body
     {
-        padding: 50px;
+        margin: 0;
+        height: 100%;
+        background-color: #0a1929;
+    }
+
+    .main
+    {
+        min-height: 100vh;
+        
+    }
+
+    .form-container
+    {
+        width: 350px;
+        margin: auto;
+        border: 1px solid #00e5ff;
+        border-radius: 5%;
+    }
+
+    .form-container > *
+    {
+        padding: 10px 20px;
+    }
+
+    p,label,.input
+    {
+        color: #b0bec5;
+        font-size: 14px;
+    }
+
+    h1
+    {
+        color: #d5e4fa;
+    }
+
+    .main-page
+    {
+        height: 100%;
+        display: flex;
+    }
+
+    #player-creation
+    {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
+        padding-bottom: 20px;
     }
-}
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+    .input
+    {
+        background-color: #0a1929;
+        border: none;
+        border-bottom: 1px solid rgb(73, 70, 70);
+        padding: 10px 3px;
+    }
+
+    .submit-button
+    {
+        background-color: #72b2ba;
+        padding: 10px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover
+    {
+        background-color: #5bacb7;
+    }
+
+    .board
+    {
+        width: min(70vw, 600px, 65vh);
+        aspect-ratio: 1;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        border: 2px solid #00e5ff;
+        position: relative;
+    }
+
+    .cell
+    {
+        border: 1px solid #5bacb7;
+    }
+
+    .ship
+    {
+        position: absolute;
+        pointer-events: none;
+        object-fit: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+    }
+
+    .deployment-page
+    {
+        padding: 2rem;
+        display: flex;
+        align-items: stretch; 
+        flex-direction: row;
+        gap: 2rem;
+    
+    }
+
+    .board-div
+    {
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        min-width: 300px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .battleships
+    {
+        flex: 1;
+        min-width: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+
+    .battleships-container
+    {
+        height: 70%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) ;
+    }
+
+    .battleship-img
+    {
+        height: 100px;
+        width: 100%;
+    }
+
+
+    .battleship-img:hover, .active
+    {
+        border: 3px solid #83888f;
+    }
+
+    .cell:hover
+    {
+        background-color: #8e4b3b;
+    }
+
+    @media (max-width: 940px) {
+        .board {
+            width: min(80vw, 360px, 55vh);
+        }
+      .deployment-page
+        {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .battleships-container
+        {
+            height: 70%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) ;
+        }
+    }
+
+    .info-bcontainer, .deployment-buttons
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .vertical
+    {
+        background-color: #0a1929;
+        border: none;
+        font-size: 24px;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .reset-btn, .start-btn
+    {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin: 10px;
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .start-btn
+    {
+        background-color: rgb(64, 138, 160);
+    }
+    
+    .start-btn:disabled
+    {
+        background-color: rgb(91, 117, 125);
+    }
+
+    .reset-btn
+    {
+        background-color: #782536;  
+    }
+
+    /* *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    } */

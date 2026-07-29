@@ -103,12 +103,9 @@ function paint_board(board) {
     });
 }
 
-
-function battleship_choice_page(name)
+function initialize_arr()
 {
-    const player = Player(name, "player");
-    let ver = true;
-    let curr_ships = [
+    const arr = [
         {
             img : Destroyer,
             id : "destroyer",
@@ -134,27 +131,69 @@ function battleship_choice_page(name)
             id : "battleship",
             ship: Ship(2)
         }]
+    return  arr;
+}
+
+function battleship_choice_page(name)
+{
+    const player = Player(name, "player");
+    let ver = false;
+    let curr_ships = initialize_arr();
 
     function display_ships_choice()
     {
-        
+
         const container = document.querySelector(".battleships-container")
         container.innerHTML = "";
         curr_ships.forEach(ship =>
         {
             container.innerHTML += `
-            <div class="battleship-card" id="${ship.id}">
-                <img src="${ship.img}">
-            </div>
+                <img class="battleship-img" id="${ship.id}" src="${ship.img}">
             `
         })
-        const ships = document.querySelectorAll(".battleship-card");
+        const ships = document.querySelectorAll(".battleship-img");
         ships.forEach(ship => {
             ship.addEventListener("click", (e) => {
                     document.querySelector(".active")?.classList.remove("active")
                     ship.classList.add('active')
-                
+
             });
+        })
+    }
+
+    function add_cells_events()
+    {
+        const cells = document.querySelectorAll('.cell')
+        cells.forEach(cell =>
+        {
+            cell.addEventListener("click", (e) => {
+                const active = document.querySelector(".active") 
+                if (active === null)
+                    return ;
+                const active_ship = curr_ships.find(ship => ship.id === active.id)
+                
+                if (!active_ship)
+                    return;
+
+                const coordinate = {x: Number(cell.dataset.x), y: Number(cell.dataset.y), vertical: ver}
+                
+                active_ship.ship.vertical = ver;
+                if (player.insertShip(active_ship.ship, coordinate))
+                {
+                    curr_ships = curr_ships.filter(ship => ship.id !== active.id)
+                    display_ships_choice()
+                    paint_board(player.getBoard().board)
+                    display_ships(player.getBoard().board)
+                    if (!curr_ships.length)
+                    {
+                        const btn = document.querySelector(".start-btn");
+                        btn.disabled = false;
+                        btn.addEventListener("click", () => {
+                            console.log("start game");
+                        })
+                    }
+                } 
+            })
         })
     }
 
@@ -168,44 +207,37 @@ function battleship_choice_page(name)
                     <div class="board"></div>
                 </div>
                 <div class="battleships">
-                    <h1>${name} roster </h1>
+                    <div class="info-bcontainer">
+                        <h1>${name} roster </h1>
+                        <button class="vertical">🔁</button>
+                    </div>
                     <div class="battleships-container">
                     </div>
-                    <div class="deployment buttons">
-                        <button class="reset-btn">reset</button>
-                        <button class="start-btn">start</button>
-                    </div>
+                    <button class="reset-btn">reset</button>
+                    <button class="start-btn" disabled>start</button>
                 </div>
             </div>
         
     `
+
     display_ships_choice();
 
     display_board(player.getBoard().board);
-    display_ships(player.getBoard().board)
-    const cells = document.querySelectorAll('.cell')
-    cells.forEach(cell =>
-    {
-        cell.addEventListener("click", (e) => {
-            const active = document.querySelector(".active") 
-            if (active === null)
-                return ;
-            const active_ship = curr_ships.find(ship => ship.id === active.id)
-            
-            if (!active_ship)
-                return;
+    add_cells_events();
+    display_ships(player.getBoard().board);
 
-            const coordinate = {x: Number(cell.dataset.x), y: Number(cell.dataset.y), vertical: ver}
-            
-            active_ship.ship.vertical = ver;
-            if (player.insertShip(active_ship.ship, coordinate))
-            {
-                curr_ships = curr_ships.filter(ship => ship.id !== active.id)
-                display_ships_choice()
-                paint_board(player.getBoard().board)
-                display_ships(player.getBoard().board)
-            } 
-        })
+    document.querySelector('.reset-btn').addEventListener("click", () => {
+        curr_ships = initialize_arr();
+        player.clear();
+        display_ships_choice();
+        display_board(player.getBoard().board);
+        add_cells_events();
+        const btn = document.querySelector(".start-btn");
+        btn.disabled = true;
+    })
+
+    document.querySelector('.vertical').addEventListener("click", () => {
+        ver  = !ver;
     })
 
 }
@@ -237,8 +269,7 @@ function display_main_page()
 
 export function dom_init()
 {
-    // display_main_page()
-    battleship_choice_page('fff')
-    
+    display_main_page()
+    // battleship_choice_page('fff')
     
 }
