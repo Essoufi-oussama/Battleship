@@ -25,5 +25,6 @@ export function Player(_name, _type)
         }
         return false;
     }
+    
     return {getBoard, getShips, insertShip}
 }

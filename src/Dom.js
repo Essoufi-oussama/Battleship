@@ -35,62 +35,79 @@ function display_ships(board)
 
     }
 
-    board.forEach((row, x)=> {
-        row.forEach((cell, y) =>{
-            if (cell.ship && !ships.includes(cell.ship))
-            {
-                ships.push(cell.ship);
+    board.forEach((row, x) => {
+    row.forEach((cell, y) => {
+        if (cell.ship && !ships.includes(cell.ship)) {
+            ships.push(cell.ship);
 
-                const ship = document.createElement("div");
-                ship.classList.add("ship");
+            const ship = document.createElement("img");
+            ship.classList.add("ship");
+            ship.src = get_ship_image(cell.ship.getLength());
 
-                ship.style.backgroundImage = `url(${get_ship_image(cell.ship.getLength())})`;
+            ship.style.width = `${cell.ship.getLength() * 10}%`;
+            ship.style.height = "10%";
+            if (!cell.ship.vertical) {
                 ship.style.left = `${y * 10}%`;
                 ship.style.top = `${x * 10}%`;
-
-                if (!cell.ship.vertical)
-                {
-                    ship.style.width = `${cell.ship.getLength() * 10}%`;
-                    ship.style.height = "10%";
-                }
-                else
-                {
-                    ship.style.width = "10%";
-                    ship.style.height = `${cell.ship.getLength() * 10}%`;
-                    ship.style.transform = "rotate(90deg)";
-                }
-
-                board_div.appendChild(ship);
+                ship.style.transform = "";
+                ship.style.transformOrigin = "";
+            } else {
+                ship.style.left = `${(y + 1) * 10}%`;
+                ship.style.top = `${x * 10}%`;
+                ship.style.transformOrigin = "top left";
+                ship.style.transform = "rotate(90deg)";
             }
-        })
-    })
+
+            board_div.appendChild(ship);
+        }
+        if (cell.ship)
+        {
+            const div = document.querySelector(
+                `.cell[data-x="${x}"][data-y="${y}"]`
+            );
+            div.style.backgroundColor = "#3e4f67"
+        }
+    });
+});
 }
 
 
-function display_board(board)
-{
-    const  board_div  = document.querySelector('.board');
+function display_board(board) {
+    const board_div = document.querySelector(".board");
     board_div.innerHTML = "";
 
-   
-    board.forEach((row, x) =>
-    {
+    board.forEach((row, x) => {
+        row.forEach((cell, y) => {
+            const div = document.createElement("div");
+            div.classList.add("cell");
+            div.dataset.x = x;
+            div.dataset.y = y;
+            board_div.appendChild(div);
+        });
+    });
+}
 
-        row.forEach((cell, y) =>
-        {
-            board_div.innerHTML += `
-            <div class="cell" data-x=${x} data-y=${y}></div>
-            `
-        })
-    })
-    display_ships(board)
+function paint_board(board) {
+    board.forEach((row, x) => {
+        row.forEach((cell, y) => {
+            const div = document.querySelector(
+                `.cell[data-x="${x}"][data-y="${y}"]`
+            );
+
+            if (cell.hit) {
+                div.style.backgroundColor = "red";
+            } else {
+                div.style.backgroundColor = "";
+            }
+        });
+    });
 }
 
 
 function battleship_choice_page(name)
 {
     const player = Player(name, "player");
-    let ver = false;
+    let ver = true;
     let curr_ships = [
         {
             img : Destroyer,
@@ -110,7 +127,7 @@ function battleship_choice_page(name)
         {
             img : Submarine,
             id : "submarine2",
-            ship: Ship(2)
+            ship: Ship(3)
         },
         {
             img : Battleship,
@@ -154,6 +171,10 @@ function battleship_choice_page(name)
                     <h1>${name} roster </h1>
                     <div class="battleships-container">
                     </div>
+                    <div class="deployment buttons">
+                        <button class="reset-btn">reset</button>
+                        <button class="start-btn">start</button>
+                    </div>
                 </div>
             </div>
         
@@ -161,7 +182,7 @@ function battleship_choice_page(name)
     display_ships_choice();
 
     display_board(player.getBoard().board);
-
+    display_ships(player.getBoard().board)
     const cells = document.querySelectorAll('.cell')
     cells.forEach(cell =>
     {
@@ -181,6 +202,7 @@ function battleship_choice_page(name)
             {
                 curr_ships = curr_ships.filter(ship => ship.id !== active.id)
                 display_ships_choice()
+                paint_board(player.getBoard().board)
                 display_ships(player.getBoard().board)
             } 
         })

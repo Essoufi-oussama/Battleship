@@ -6,7 +6,7 @@ html, body
 
 .main
 {
-    height: 100%;
+    min-height: 100vh;
     background-color: #0a1929;
 }
 
@@ -89,8 +89,8 @@ h1
 .ship
 {
     position: absolute;
-    object-fit: fill;
     pointer-events: none;
+    object-fit: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -103,6 +103,7 @@ h1
     align-items: stretch; 
     flex-direction: row;
     gap: 2rem;
+    
 }
 
 .board-div
@@ -164,4 +165,8 @@ h1
     }
 }
 
-
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
