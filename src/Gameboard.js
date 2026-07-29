@@ -12,15 +12,15 @@ export function Gameboard()
 
     function place_ship(ship, coordinate)
     {
-        const hor = coordinate.horizontal;
+        const ver = coordinate.vertical;
         const x = coordinate.x
         const y = coordinate.y
-        const ship_len = ship.getLength()
-        console.log(coordinate);
+        const ship_len = ship.getLength();
 
-        if (x + (hor ? ship_len : 0) <= board.length && y + (hor ? 0 : ship_len) <= board[x].length)
+        
+        if (x + (ver ? ship_len : 0) <= board.length && y + (ver ? 0 : ship_len) <= board[x].length)
         {
-            if (hor)
+            if (ver)
             {
                 for (let i = x; i < x + ship_len; i++)
                 {

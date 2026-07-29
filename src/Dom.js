@@ -15,6 +15,8 @@ function display_ships(board)
     const ships = [];
     const board_div = document.querySelector('.board');
 
+    board_div.querySelectorAll('.ship').forEach(ship => ship.remove());
+
 
     function get_ship_image(len)
     {
@@ -46,7 +48,7 @@ function display_ships(board)
                 ship.style.left = `${y * 10}%`;
                 ship.style.top = `${x * 10}%`;
 
-                if (cell.ship.horizontal)
+                if (!cell.ship.vertical)
                 {
                     ship.style.width = `${cell.ship.getLength() * 10}%`;
                     ship.style.height = "10%";
@@ -55,6 +57,7 @@ function display_ships(board)
                 {
                     ship.style.width = "10%";
                     ship.style.height = `${cell.ship.getLength() * 10}%`;
+                    ship.style.transform = "rotate(90deg)";
                 }
 
                 board_div.appendChild(ship);
@@ -87,7 +90,7 @@ function display_board(board)
 function battleship_choice_page(name)
 {
     const player = Player(name, "player");
-    let hor = true;
+    let ver = false;
     let curr_ships = [
         {
             img : Destroyer,
@@ -115,7 +118,6 @@ function battleship_choice_page(name)
             ship: Ship(2)
         }]
 
-    const board = player.getBoard()
     function display_ships_choice()
     {
         
@@ -158,7 +160,7 @@ function battleship_choice_page(name)
     `
     display_ships_choice();
 
-    display_board(board.board)
+    display_board(player.getBoard().board);
 
     const cells = document.querySelectorAll('.cell')
     cells.forEach(cell =>
@@ -172,14 +174,14 @@ function battleship_choice_page(name)
             if (!active_ship)
                 return;
 
-            const coordinate = {x: Number(cell.dataset.x), y: Number(cell.dataset.y), horizontal: hor}
+            const coordinate = {x: Number(cell.dataset.x), y: Number(cell.dataset.y), vertical: ver}
             
-            active_ship.ship.horizontal = hor;
-            if (board.place_ship(active_ship.ship, coordinate))
+            active_ship.ship.vertical = ver;
+            if (player.insertShip(active_ship.ship, coordinate))
             {
                 curr_ships = curr_ships.filter(ship => ship.id !== active.id)
                 display_ships_choice()
-                display_ships(board.board)
+                display_ships(player.getBoard().board)
             } 
         })
     })
