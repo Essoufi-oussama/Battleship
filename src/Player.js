@@ -26,7 +26,11 @@ export function Player(_name, _type)
     {
         return gameboard.containShip(coordinate);
     }
-
+    
+    function checkSunkShip(coordinate)
+    {
+        return gameboard.shipStatus();
+    }
     
     function clear()
     {

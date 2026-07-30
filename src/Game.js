@@ -81,8 +81,16 @@ export function Game(player1)
             index = Math.floor(Math.random() * cords.length)
            
         const coor = cords[index]
+
         player1.receiveAttack(coor)
-        latest_cord = coor;
+        if (player1.containShip(coor))
+        {
+            if (player1.shipStatus(coor))
+                latest_cord = null;
+            else
+                latest_cord = coor;
+        }
+
         cords.splice(index, 1);
         return coor;
     }

@@ -4,11 +4,11 @@ import { Player } from "./Player.js";
 import {get_ship_image, display_board, paint_board} from "./utils.js";
 
 
-function display_ships(board)
+function display_ships(board, selector)
 {
     let y = 0;
     const ships = [];
-    const board_div = document.querySelector('.board');
+    const board_div = document.querySelector(selector);
 
     board_div.querySelectorAll('.ship').forEach(ship => ship.remove());
 
@@ -80,6 +80,18 @@ function play_turn(cell, board)
     }
 }
 
+function color_cpu_choice(coor, board)
+{
+    const parent = document.querySelector(`.player-board`)
+    const element = create_hit_div(coor);
+    if (board.containShip(coor))
+    {
+        element.style.backgroundColor = 'red'
+    }
+    parent.appendChild(element);
+}
+
+
 function start_game(player)
 {
     const game = Game(player);
@@ -95,6 +107,7 @@ function start_game(player)
     const cpu_board = game.getCpuBoard();
     display_board(player_board.board, ".player-board")
     display_board(cpu_board.board, ".cpu-board")
+    display_ships(player_board.board, ".player-board")
     const cpu_board_container = document.querySelector(".cpu-board")
 
     cpu_board_container.querySelectorAll(".cell").forEach((cell) =>
@@ -104,7 +117,8 @@ function start_game(player)
                 return;
             play_turn(cell, cpu_board)
             player_turn = false;
-            const coor = game.play_cpu_turn()
+            const coor = game.play_cpu_turn();
+            color_cpu_choice(coor, player_board);
             player_turn = true;
         }, { once: true })
     })
@@ -191,7 +205,7 @@ function battleship_choice_page(name)
                     curr_ships = curr_ships.filter(ship => ship.id !== active.id)
                     display_ships_choice(curr_ships)
                     paint_board(player.getBoard().board)
-                    display_ships(player.getBoard().board)
+                    display_ships(player.getBoard().board, '.board')
                     if (!curr_ships.length)
                     {
                         const btn = document.querySelector(".start-btn");

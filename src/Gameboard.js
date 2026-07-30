@@ -98,5 +98,10 @@ export function Gameboard()
         return board[coordinate.x][coordinate.y].ship !== null;
     }
 
-    return {board, containShip, clear, place_ship, receiveAttack, gameDone}
+    function shipStatus(coordinate)
+    {
+        return board[coordinate.x][coordinate.y].ship.isSunk();
+    }
+
+    return {board, containShip, clear, place_ship, shipStatus, receiveAttack, gameDone}
 }
