@@ -49,24 +49,19 @@ export function Gameboard()
 
     function receiveAttack(coordinate)
     {
-        if (coordinate.x >=  board.length || coordinate.y >= board.length)
+        if (!valide_coordinate(coordinate))
             return false;
         const  x = coordinate.x;
         const y = coordinate.y;
-        if (board[x][y].ship === null)
-        {
-            if (board[x][y].hit)
-                return false; 
-            else
-                board[x][y].hit = true
-        }
-        else
-        {
-            if (board[x][y].hit)
-                return false
+        
+        if (board[x][y].hit)
+            return false;
+
+        board[x][y].hit = true;
+
+        if (board[x][y].ship)
             board[x][y].ship.hit();
-            board[x][y].hit = true;
-        }
+
         return true;
     }
 
@@ -85,5 +80,23 @@ export function Gameboard()
         });
         Ships = []
     }
-    return {board, clear, place_ship, receiveAttack, gameDone}
+
+    function valide_coordinate(coordinate)
+    {
+        if (!coordinate)
+            return false;
+        if (!Number.isInteger(coordinate.x) || ! Number.isInteger(coordinate.y))
+            return false;
+        if (coordinate.x < 0 || coordinate.x > board.length || coordinate.y < 0 || coordinate.y > board[0].length)
+            return false;
+        return true;
+    }
+    function containShip(coordinate)
+    {
+        if (!valide_coordinate(coordinate))
+            return false;
+        return board[coordinate.x][coordinate.y].ship !== null;
+    }
+
+    return {board, containShip, clear, place_ship, receiveAttack, gameDone}
 }

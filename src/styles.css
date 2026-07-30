@@ -71,7 +71,7 @@
         background-color: #5bacb7;
     }
 
-    .board
+    .board, .player-board, .cpu-board
     {
         width: min(70vw, 600px, 65vh);
         aspect-ratio: 1;
@@ -138,6 +138,13 @@
         width: 100%;
     }
 
+    .boards-container
+    {
+        display: flex;
+        gap: 5rem;
+        justify-content: center;
+        align-items: center;
+    }
 
     .battleship-img:hover, .active
     {
@@ -209,6 +216,14 @@
         background-color: #782536;  
     }
 
+    .circle
+    {
+        position: absolute;
+        border-radius: 50%;
+        width: 5%;
+        height: 5%;
+        pointer-events: none;
+    }
     /* *,
     *::before,
     *::after {

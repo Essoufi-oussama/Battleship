@@ -1,12 +1,7 @@
 import { Game } from "./Game.js";
 import { Ship } from "./Ship.js";
 import { Player } from "./Player.js";
-
-
-import Destroyer from "./asset/big_one.svg"
-import Carrier from "./asset/middle_biggest.svg"
-import Submarine from "./asset/middle_smallest.svg"
-import Battleship from "./asset/smallest.svg"
+import {get_ship_image, display_board, paint_board} from "./utils.js";
 
 
 function display_ships(board)
@@ -16,24 +11,6 @@ function display_ships(board)
     const board_div = document.querySelector('.board');
 
     board_div.querySelectorAll('.ship').forEach(ship => ship.remove());
-
-
-    function get_ship_image(len)
-    {
-        switch(len)
-        {
-            case 5:
-                return Destroyer;
-            case 4:
-                return Carrier;
-            case 3:
-                return Submarine;
-            case 2:
-                return Battleship
-        }
-        
-
-    }
 
     board.forEach((row, x) => {
     row.forEach((cell, y) => {
@@ -71,95 +48,126 @@ function display_ships(board)
 });
 }
 
-
-function display_board(board) {
-    const board_div = document.querySelector(".board");
-    board_div.innerHTML = "";
-
-    board.forEach((row, x) => {
-        row.forEach((cell, y) => {
-            const div = document.createElement("div");
-            div.classList.add("cell");
-            div.dataset.x = x;
-            div.dataset.y = y;
-            board_div.appendChild(div);
-        });
-    });
+function create_hit_div(cor)
+{
+    const {x, y} = cor
+    const element = document.createElement("div");
+    element.classList.add("circle")
+    element.style.top = `${x * 10 + 5}%`
+    element.style.left = `${y * 10 + 5}%`
+    element.style.transform = "translate(-50%, -50%)";
+    element.style.backgroundColor = 'gray';
+    return element;
 }
 
-function paint_board(board) {
-    board.forEach((row, x) => {
-        row.forEach((cell, y) => {
-            const div = document.querySelector(
-                `.cell[data-x="${x}"][data-y="${y}"]`
-            );
-
-            if (cell.hit) {
-                div.style.backgroundColor = "red";
-            } else {
-                div.style.backgroundColor = "";
-            }
-        });
-    });
+function play_turn(cell, board)
+{
+    const coor = 
+    {
+        x: Number(cell.dataset.x),
+        y: Number(cell.dataset.y)
+    }
+            
+    if (board.receiveAttack(coor))
+    {
+        const parent = document.querySelector(".cpu-board")
+        const element = create_hit_div(coor);
+        if (board.containShip(coor))
+        {
+            element.style.backgroundColor = 'red'
+        }
+        parent.appendChild(element);
+    }
 }
+
+function start_game(player)
+{
+    const game = Game(player);
+    let player_turn = true;
+
+    document.getElementById("content").innerHTML =`
+        <div class="boards-container">
+            <div class="player-board"></div>
+            <div class="cpu-board"></div>
+        </div>
+    `
+    const player_board = game.getPlayerBoard();
+    const cpu_board = game.getCpuBoard();
+    display_board(player_board.board, ".player-board")
+    display_board(cpu_board.board, ".cpu-board")
+    const cpu_board_container = document.querySelector(".cpu-board")
+
+    cpu_board_container.querySelectorAll(".cell").forEach((cell) =>
+    {
+        cell.addEventListener("click", () => {
+            if (!player_turn)
+                return;
+            play_turn(cell, cpu_board)
+            player_turn = false;
+            const coor = game.play_cpu_turn()
+            player_turn = true;
+        }, { once: true })
+    })
+}
+
 
 function initialize_arr()
 {
     const arr = [
         {
-            img : Destroyer,
+            img : get_ship_image(5),
             id : "destroyer",
             ship: Ship(5)
         },
         {
-            img : Carrier,
+            img : get_ship_image(4),
             id : "carrier",
             ship: Ship(4)
         },
         {
-            img : Submarine,
+            img : get_ship_image(3),
             id : "submarine1",
             ship: Ship(3)
         },
         {
-            img : Submarine,
+            img : get_ship_image(3),
             id : "submarine2",
             ship: Ship(3)
         },
         {
-            img : Battleship,
+            img : get_ship_image(2),
             id : "battleship",
             ship: Ship(2)
         }]
     return  arr;
 }
 
+function display_ships_choice(curr_ships)
+{
+
+    const container = document.querySelector(".battleships-container")
+    container.innerHTML = "";
+    curr_ships.forEach(ship =>
+    {
+        container.innerHTML += `
+            <img class="battleship-img" id="${ship.id}" src="${ship.img}">
+        `
+    })
+    const ships = document.querySelectorAll(".battleship-img");
+    ships.forEach(ship => {
+        ship.addEventListener("click", (e) => {
+                document.querySelector(".active")?.classList.remove("active")
+                ship.classList.add('active')
+        });
+    })
+}
+
+
 function battleship_choice_page(name)
 {
     const player = Player(name, "player");
     let ver = false;
     let curr_ships = initialize_arr();
-
-    function display_ships_choice()
-    {
-
-        const container = document.querySelector(".battleships-container")
-        container.innerHTML = "";
-        curr_ships.forEach(ship =>
-        {
-            container.innerHTML += `
-                <img class="battleship-img" id="${ship.id}" src="${ship.img}">
-            `
-        })
-        const ships = document.querySelectorAll(".battleship-img");
-        ships.forEach(ship => {
-            ship.addEventListener("click", (e) => {
-                    document.querySelector(".active")?.classList.remove("active")
-                    ship.classList.add('active')
-
-            });
-        })
-    }
 
     function add_cells_events()
     {
@@ -181,7 +189,7 @@ function battleship_choice_page(name)
                 if (player.insertShip(active_ship.ship, coordinate))
                 {
                     curr_ships = curr_ships.filter(ship => ship.id !== active.id)
-                    display_ships_choice()
+                    display_ships_choice(curr_ships)
                     paint_board(player.getBoard().board)
                     display_ships(player.getBoard().board)
                     if (!curr_ships.length)
@@ -189,7 +197,8 @@ function battleship_choice_page(name)
                         const btn = document.querySelector(".start-btn");
                         btn.disabled = false;
                         btn.addEventListener("click", () => {
-                            console.log("start game");
+                            if (!curr_ships.length)
+                                start_game(player);
                         })
                     }
                 } 
@@ -220,17 +229,16 @@ function battleship_choice_page(name)
         
     `
 
-    display_ships_choice();
-
-    display_board(player.getBoard().board);
+    display_ships_choice(curr_ships);
+    display_board(player.getBoard().board, ".board");
     add_cells_events();
-    display_ships(player.getBoard().board);
+    display_ships(player.getBoard().board, ".board");
 
     document.querySelector('.reset-btn').addEventListener("click", () => {
         curr_ships = initialize_arr();
         player.clear();
-        display_ships_choice();
-        display_board(player.getBoard().board);
+        display_ships_choice(curr_ships);
+        display_board(player.getBoard().board, ".board");
         add_cells_events();
         const btn = document.querySelector(".start-btn");
         btn.disabled = true;
@@ -270,6 +278,4 @@ function display_main_page()
 export function dom_init()
 {
     display_main_page()
-    // battleship_choice_page('fff')
-    
 }

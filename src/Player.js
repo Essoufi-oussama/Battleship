@@ -11,20 +11,22 @@ export function Player(_name, _type)
     {
         return gameboard
     }
-    function getShips()
-    {
-        return ships;
-    }
+
     function insertShip(ship, coordinate)
     {
         if (gameboard.place_ship(ship, coordinate))
         {
-            console.log("Ship placed successfully");
             ships.push(ship)
             return true;
         }
         return false;
     }
+
+    function containShip(coordinate)
+    {
+        return gameboard.containShip(coordinate);
+    }
+
     
     function clear()
     {
@@ -33,5 +35,5 @@ export function Player(_name, _type)
     }
 
 
-    return {clear, getBoard, getShips, insertShip}
+    return {clear, getBoard, insertShip}
 }
