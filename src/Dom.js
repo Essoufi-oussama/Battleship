@@ -1,7 +1,7 @@
 import { Game } from "./Game.js";
 import { Ship } from "./Ship.js";
 import { Player } from "./Player.js";
-import {get_ship_image, display_board, paint_board} from "./utils.js";
+import {get_ship_image, display_board, paint_board, playerMessages, aiMessages} from "./utils.js";
 
 
 function display_ships(board, selector)
@@ -48,6 +48,23 @@ function display_ships(board, selector)
 });
 }
 
+function get_ship_origin(board, ship)
+{
+    let origin = null;
+
+    board.forEach((row, x) => {
+        row.forEach((cell, y) => {
+            if (cell.ship === ship)
+            {
+                if (origin === null || x < origin.x || y < origin.y)
+                    origin = { x, y };
+            }
+        });
+    });
+
+    return origin;
+}
+
 function create_hit_div(cor)
 {
     const {x, y} = cor
@@ -67,7 +84,7 @@ function play_turn(cell, board)
         x: Number(cell.dataset.x),
         y: Number(cell.dataset.y)
     }
-            
+    const message = document.querySelector(".message");   
     if (board.receiveAttack(coor))
     {
         const parent = document.querySelector(".cpu-board")
@@ -75,6 +92,17 @@ function play_turn(cell, board)
         if (board.containShip(coor))
         {
             element.style.backgroundColor = 'red'
+            if (board.shipStatus(coor))
+            {
+                message.textContent = playerMessages.sunk[Math.floor(Math.random() * playerMessages.sunk.length)];
+                
+            }
+            else
+                message.textContent = playerMessages.hit[Math.floor(Math.random() * playerMessages.hit.length)];
+        }
+        else
+        {
+            message.innerHTML = playerMessages.miss[Math.floor(Math.random() * playerMessages.miss.length)];
         }
         parent.appendChild(element);
     }
@@ -84,11 +112,19 @@ function color_cpu_choice(coor, board)
 {
     const parent = document.querySelector(`.player-board`)
     const element = create_hit_div(coor);
+    const message = document.querySelector(".message");   
     if (board.containShip(coor))
     {
         element.style.backgroundColor = 'red'
+         if (board.shipStatus(coor))
+            message.textContent = aiMessages.sunk[Math.floor(Math.random() * aiMessages.sunk.length)];
+        else
+            message.textContent = aiMessages.hit[Math.floor(Math.random() * aiMessages.hit.length)];
     }
+    else
+        message.innerHTML = aiMessages.miss[Math.floor(Math.random() * aiMessages.miss.length)]
     parent.appendChild(element);
+    
 }
 
 
@@ -101,6 +137,9 @@ function start_game(player)
         <div class="boards-container">
             <div class="player-board"></div>
             <div class="cpu-board"></div>
+        </div>
+        <div class="messages-container">
+            <div class="message"></div>
         </div>
     `
     const player_board = game.getPlayerBoard();
@@ -117,9 +156,13 @@ function start_game(player)
                 return;
             play_turn(cell, cpu_board)
             player_turn = false;
-            const coor = game.play_cpu_turn();
-            color_cpu_choice(coor, player_board);
-            player_turn = true;
+            cpu_board_container.classList.add("waiting");
+            setTimeout(() => {
+                const coor = game.play_cpu_turn();
+                color_cpu_choice(coor, player_board);
+                player_turn = true;
+                cpu_board_container.classList.remove("waiting");
+            }, 900);
         }, { once: true })
     })
 }
