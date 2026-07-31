@@ -127,6 +127,21 @@ function color_cpu_choice(coor, board)
     
 }
 
+function display_end_page(message)
+{
+    document.getElementById("content").innerHTML = `
+        <div class="end-msg-container">
+            <div class="final-msg">
+            </div>
+            <button class="retry">retry</button>
+        </div>
+    `
+    document.querySelector(".final-msg").textContent = message;
+    document.querySelector(".retry").addEventListener("click", () => {
+        display_main_page();
+    });
+}
+
 
 function start_game(player)
 {
@@ -155,11 +170,18 @@ function start_game(player)
             if (!player_turn)
                 return;
             play_turn(cell, cpu_board)
+            if (cpu_board.gameDone())
+            {
+                display_end_page(playerMessages.win[Math.floor(Math.random() * playerMessages.win.length)])
+                return;
+            }
             player_turn = false;
             cpu_board_container.classList.add("waiting");
             setTimeout(() => {
                 const coor = game.play_cpu_turn();
                 color_cpu_choice(coor, player_board);
+                if (player_board.gameDone())
+                    display_end_page(playerMessages.lose[Math.floor(Math.random() * playerMessages.lose.length)])
                 player_turn = true;
                 cpu_board_container.classList.remove("waiting");
             }, 900);

@@ -135,21 +135,5 @@ export const aiMessages = {
     "🤖 Vessel sunk.",
     "🤖 Destruction confirmed.",
     "🤖 One less threat remains."
-  ],
-
-  win: [
-    "🤖 Mission complete. Victory achieved.",
-    "🤖 All hostile vessels eliminated.",
-    "🤖 Simulation complete. You have been defeated.",
-    "🤖 Your fleet has been destroyed.",
-    "🤖 No further resistance detected."
-  ],
-
-  lose: [
-    "🤖 Critical systems failing...",
-    "🤖 Fleet destroyed.",
-    "🤖 Mission failure.",
-    "🤖 Retreat sequence initiated.",
-    "🤖 You have outmaneuvered me."
   ]
 };

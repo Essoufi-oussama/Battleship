@@ -15,7 +15,7 @@
     .form-container
     {
         width: 350px;
-        margin: auto;
+        margin: 0;
         border: 1px solid #00e5ff;
         border-radius: 5%;
     }
@@ -38,8 +38,10 @@
 
     .main-page
     {
-        height: 100%;
+        min-height: 100vh;
         display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     #player-creation
@@ -144,6 +146,7 @@
         gap: 5rem;
         justify-content: center;
         align-items: center;
+        padding: 2%;
     }
 
     .battleship-img:hover, .active
@@ -160,12 +163,16 @@
         .board {
             width: min(80vw, 360px, 55vh);
         }
-      .deployment-page
+      .deployment-page, .boards-container
         {
             padding: 50px;
             display: flex;
             flex-direction: column;
             gap: 30px;
+        }
+        .boards-container
+        {
+            padding: 0;
         }
         .battleships-container
         {
@@ -191,7 +198,7 @@
         cursor: pointer;
     }
 
-    .reset-btn, .start-btn
+    .reset-btn, .start-btn, .retry
     {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -201,7 +208,7 @@
         cursor: pointer;
     }
 
-    .start-btn
+    .start-btn, .retry
     {
         background-color: rgb(64, 138, 160);
     }
@@ -244,6 +251,50 @@
 
     .cpu-board.waiting {
         pointer-events: none;
+    }
+
+
+    .end-msg-container
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+        gap: 1.5rem;
+        text-align: center;
+        background: radial-gradient(circle at top, rgba(0, 229, 255, 0.18), transparent 45%), #0a1929;
+    }
+
+    .final-msg
+    {
+        max-width: min(90vw, 900px);
+        color: #f4fbff;
+        font-size: clamp(2.5rem, 6vw, 5.5rem);
+        line-height: 1.05;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow: 0 0 18px rgba(0, 229, 255, 0.35);
+        padding: 0 1rem;
+    }
+
+    .end-msg-container .retry
+    {
+        font-size: 1.25rem;
+        padding: 1rem 2rem;
+        min-width: 180px;
+        border: none;
+        border-radius: 999px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .end-msg-container .retry:hover
+    {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
     }
     /* *,
     *::before,
