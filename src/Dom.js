@@ -34,7 +34,7 @@ function display_ships(board, selector)
                 ship.style.transformOrigin = "top left";
                 ship.style.transform = "rotate(90deg)";
             }
-
+            
             board_div.appendChild(ship);
         }
         if (cell.ship)
@@ -77,35 +77,20 @@ function create_hit_div(cor)
     return element;
 }
 
-function play_turn(cell, board)
+
+function display_end_page(message)
 {
-    const coor = 
-    {
-        x: Number(cell.dataset.x),
-        y: Number(cell.dataset.y)
-    }
-    const message = document.querySelector(".message");   
-    if (board.receiveAttack(coor))
-    {
-        const parent = document.querySelector(".cpu-board")
-        const element = create_hit_div(coor);
-        if (board.containShip(coor))
-        {
-            element.style.backgroundColor = 'red'
-            if (board.shipStatus(coor))
-            {
-                message.textContent = playerMessages.sunk[Math.floor(Math.random() * playerMessages.sunk.length)];
-                
-            }
-            else
-                message.textContent = playerMessages.hit[Math.floor(Math.random() * playerMessages.hit.length)];
-        }
-        else
-        {
-            message.innerHTML = playerMessages.miss[Math.floor(Math.random() * playerMessages.miss.length)];
-        }
-        parent.appendChild(element);
-    }
+    document.getElementById("content").innerHTML = `
+    <div class="end-msg-container">
+    <div class="final-msg">
+    </div>
+    <button class="retry">retry</button>
+    </div>
+    `
+    document.querySelector(".final-msg").textContent = message;
+    document.querySelector(".retry").addEventListener("click", () => {
+        display_main_page();
+    });
 }
 
 function color_cpu_choice(coor, board)
@@ -114,10 +99,12 @@ function color_cpu_choice(coor, board)
     const element = create_hit_div(coor);
     const message = document.querySelector(".message");   
     if (board.containShip(coor))
-    {
-        element.style.backgroundColor = 'red'
-         if (board.shipStatus(coor))
-            message.textContent = aiMessages.sunk[Math.floor(Math.random() * aiMessages.sunk.length)];
+        {
+            element.style.backgroundColor = 'red'
+            if (board.shipStatus(coor))
+                {
+                    message.textContent = aiMessages.sunk[Math.floor(Math.random() * aiMessages.sunk.length)];
+                }
         else
             message.textContent = aiMessages.hit[Math.floor(Math.random() * aiMessages.hit.length)];
     }
@@ -127,31 +114,81 @@ function color_cpu_choice(coor, board)
     
 }
 
-function display_end_page(message)
-{
-    document.getElementById("content").innerHTML = `
-        <div class="end-msg-container">
-            <div class="final-msg">
-            </div>
-            <button class="retry">retry</button>
-        </div>
-    `
-    document.querySelector(".final-msg").textContent = message;
-    document.querySelector(".retry").addEventListener("click", () => {
-        display_main_page();
-    });
-}
-
-
 function start_game(player)
 {
     const game = Game(player);
     let player_turn = true;
+    const sunk_cpu_ships = []
+    
+    function display_sunk_ships()
+    {
+        const board_div = document.querySelector(".cpu-board")
+        document.querySelectorAll(".sunk-ship").forEach(ship => ship.remove())
+        sunk_cpu_ships.forEach(ship =>
+            {
+                const {x, y, vertical} = ship.origin
+                const ship_img = document.createElement("img")
+                ship_img.classList.add("sunk-ship")
+                ship_img.src = get_ship_image(ship.getLength());
+                ship_img.style.width = `${ship.getLength() * 10}%`;
+                ship_img.style.height = "10%";
+                if (vertical)
+                {
+                    ship_img.style.top = `${x * 10}%`
+                    ship_img.style.left = `${(y + 1) * 10}%`
+                    ship_img.style.transformOrigin = "top left";
+                    ship_img.style.transform = "rotate(90deg)";
+                }
+                else
+                {
+                    ship_img.style.top = `${x * 10}%`
+                    ship_img.style.left = `${y * 10}%`
+                    ship_img.style.transformOrigin = "";
+                    ship_img.style.transform = "";
+                }
+                board_div.appendChild(ship_img)
+            }
+        )
+    }
 
+
+    function play_turn(cell, board)
+    {
+        const coor = 
+        {
+            x: Number(cell.dataset.x),
+            y: Number(cell.dataset.y)
+        }
+        const message = document.querySelector(".message");   
+        if (board.receiveAttack(coor))
+        {
+            const parent = document.querySelector(".cpu-board")
+            const element = create_hit_div(coor);
+            if (board.containShip(coor))
+            {
+                element.style.backgroundColor = 'red'
+                if (board.shipStatus(coor))
+                {
+                    message.textContent = playerMessages.sunk[Math.floor(Math.random() * playerMessages.sunk.length)];
+                    sunk_cpu_ships.push(board.getShip(coor))
+                    display_sunk_ships();
+                }
+                else
+                    message.textContent = playerMessages.hit[Math.floor(Math.random() * playerMessages.hit.length)];
+            }
+            else
+            {
+                message.innerHTML = playerMessages.miss[Math.floor(Math.random() * playerMessages.miss.length)];
+            }
+            parent.appendChild(element);
+        }
+    }
+    
+    
     document.getElementById("content").innerHTML =`
-        <div class="boards-container">
-            <div class="player-board"></div>
-            <div class="cpu-board"></div>
+    <div class="boards-container">
+    <div class="player-board"></div>
+    <div class="cpu-board"></div>
         </div>
         <div class="messages-container">
             <div class="message"></div>
@@ -163,6 +200,11 @@ function start_game(player)
     display_board(cpu_board.board, ".cpu-board")
     display_ships(player_board.board, ".player-board")
     const cpu_board_container = document.querySelector(".cpu-board")
+    const player_board_container = document.querySelector(".player-board")
+    cpu_board_container.classList.add("active")
+    cpu_board_container.classList.remove("inactive")
+    player_board_container.classList.remove("active")
+    player_board_container.classList.add("inactive")
 
     cpu_board_container.querySelectorAll(".cell").forEach((cell) =>
     {
@@ -178,13 +220,24 @@ function start_game(player)
             player_turn = false;
             cpu_board_container.classList.add("waiting");
             setTimeout(() => {
+                cpu_board_container.classList.add("active")
+                cpu_board_container.classList.remove("inactive")
+                player_board_container.classList.remove("active")
+                player_board_container.classList.add("inactive")
+            }, 1500)
+                cpu_board_container.classList.remove("active")
+                cpu_board_container.classList.add("inactive")
+                player_board_container.classList.add("active")
+                player_board_container.classList.remove("inactive")
+            setTimeout(() => {
+                
                 const coor = game.play_cpu_turn();
                 color_cpu_choice(coor, player_board);
                 if (player_board.gameDone())
                     display_end_page(playerMessages.lose[Math.floor(Math.random() * playerMessages.lose.length)])
                 player_turn = true;
                 cpu_board_container.classList.remove("waiting");
-            }, 900);
+            }, 1500);
         }, { once: true })
     })
 }

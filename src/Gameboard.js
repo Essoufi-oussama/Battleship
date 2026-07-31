@@ -103,5 +103,10 @@ export function Gameboard()
         return board[coordinate.x][coordinate.y].ship.isSunk();
     }
 
-    return {board, containShip, clear, place_ship, shipStatus, receiveAttack, gameDone}
+    function getShip({x, y})
+    {
+        return board[x][y].ship
+    }
+
+    return {board, containShip, clear, getShip, place_ship, shipStatus, receiveAttack, gameDone}
 }

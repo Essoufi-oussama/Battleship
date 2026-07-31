@@ -88,7 +88,7 @@
         border: 1px solid #5bacb7;
     }
 
-    .ship
+    .ship, .sunk-ship
     {
         position: absolute;
         pointer-events: none;
@@ -180,6 +180,28 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr) ;
         }
+        .player-board
+        {
+            
+            transition: transform 1s ease-out 0.05s;
+            
+        }
+        .cpu-board
+        {
+            
+            transition: transform 1s ease-out 0.05s;
+            
+        }
+        .active
+        {
+            transform: scale(1.10);
+
+        }
+        .inactive
+        {
+            transform: scale(0.60);
+
+        }
     }
 
     .info-bcontainer, .deployment-buttons
@@ -238,7 +260,7 @@
         justify-content: center;
         align-items: center;
         padding: 10px;
-        margin-top: 10px;
+        margin-top: 10%;
         width: 100%;
     }
 

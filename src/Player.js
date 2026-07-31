@@ -16,7 +16,8 @@ export function Player(_name, _type)
     {
         if (gameboard.place_ship(ship, coordinate))
         {
-            ships.push(ship)
+            ship.origin = coordinate;
+            ships.push(ship);
             return true;
         }
         return false;

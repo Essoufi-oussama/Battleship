@@ -5,9 +5,7 @@ export function Ship(length)
     let ship_length = length
     let n_hits = 0;
     let sunk = false;
-    let is_placed = false;
-    let vertical = false;
-
+    let origin = {x: 0, y: 0}
     function hit()
     {
         if (n_hits < ship_length)
@@ -25,5 +23,5 @@ export function Ship(length)
         return ship_length;
     }
 
-    return {hit, isSunk, getLength, is_placed, vertical};
+    return {hit, isSunk, getLength, is_placed: false, vertical: false, origin: null};
 }
