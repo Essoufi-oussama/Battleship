@@ -119,6 +119,24 @@ function start_game(player)
     const game = Game(player);
     let player_turn = true;
     const sunk_cpu_ships = []
+
+    function set_board_focus(cpu_board_active)
+    {
+        if (cpu_board_active)
+        {
+            cpu_board_container.classList.add("active")
+            cpu_board_container.classList.remove("inactive")
+            player_board_container.classList.remove("active")
+            player_board_container.classList.add("inactive")
+        }
+        else
+        {
+            cpu_board_container.classList.remove("active")
+            cpu_board_container.classList.add("inactive")
+            player_board_container.classList.add("active")
+            player_board_container.classList.remove("inactive")
+        }
+    }
     
     function display_sunk_ships()
     {
@@ -159,6 +177,7 @@ function start_game(player)
             x: Number(cell.dataset.x),
             y: Number(cell.dataset.y)
         }
+        let hit =  false;
         const message = document.querySelector(".message");   
         if (board.receiveAttack(coor))
         {
@@ -175,6 +194,7 @@ function start_game(player)
                 }
                 else
                     message.textContent = playerMessages.hit[Math.floor(Math.random() * playerMessages.hit.length)];
+                hit = true;
             }
             else
             {
@@ -182,6 +202,7 @@ function start_game(player)
             }
             parent.appendChild(element);
         }
+        return hit;
     }
     
     
@@ -201,17 +222,15 @@ function start_game(player)
     display_ships(player_board.board, ".player-board")
     const cpu_board_container = document.querySelector(".cpu-board")
     const player_board_container = document.querySelector(".player-board")
-    cpu_board_container.classList.add("active")
-    cpu_board_container.classList.remove("inactive")
-    player_board_container.classList.remove("active")
-    player_board_container.classList.add("inactive")
+    set_board_focus(true)
 
     cpu_board_container.querySelectorAll(".cell").forEach((cell) =>
     {
         cell.addEventListener("click", () => {
             if (!player_turn)
                 return;
-            play_turn(cell, cpu_board)
+            if (play_turn(cell, cpu_board))
+                return;
             if (cpu_board.gameDone())
             {
                 display_end_page(playerMessages.win[Math.floor(Math.random() * playerMessages.win.length)])
@@ -219,25 +238,34 @@ function start_game(player)
             }
             player_turn = false;
             cpu_board_container.classList.add("waiting");
-            setTimeout(() => {
-                cpu_board_container.classList.add("active")
-                cpu_board_container.classList.remove("inactive")
-                player_board_container.classList.remove("active")
-                player_board_container.classList.add("inactive")
-            }, 1500)
-                cpu_board_container.classList.remove("active")
-                cpu_board_container.classList.add("inactive")
-                player_board_container.classList.add("active")
-                player_board_container.classList.remove("inactive")
-            setTimeout(() => {
-                
+            
+            function cpu_turn()
+            {
                 const coor = game.play_cpu_turn();
                 color_cpu_choice(coor, player_board);
+                if (player_board.containShip(coor))
+                {
+                    setTimeout(cpu_turn, 1500);
+                }
+                else
+                {
+                    set_board_focus(true)
+                    player_turn = true;
+                    cpu_board_container.classList.remove("waiting");
+                }
                 if (player_board.gameDone())
+                {
                     display_end_page(playerMessages.lose[Math.floor(Math.random() * playerMessages.lose.length)])
-                player_turn = true;
-                cpu_board_container.classList.remove("waiting");
-            }, 1500);
+                    return;
+                }
+                
+            }
+            set_board_focus(false)
+            setTimeout(() =>{
+                
+            
+                cpu_turn()
+            }, 1500)
         }, { once: true })
     })
 }

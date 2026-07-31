@@ -194,7 +194,7 @@
         }
         .active
         {
-            transform: scale(1.10);
+            transform: scale(1);
 
         }
         .inactive
@@ -259,7 +259,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 0.25rem;
         margin-top: 10%;
         width: 100%;
     }
